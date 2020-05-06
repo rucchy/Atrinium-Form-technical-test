@@ -46,6 +46,7 @@ export default () => {
       description:
         'Tu información ha sido enviada correctamente. En breves nos pondremos en contacto contigo',
     })
+    form.resetFields()
   }
 
   //Objeto con las validaciones de los campos del formulario
