@@ -6,21 +6,30 @@ export default ({ form, pais, persona }) => {
 
   //Cambio los tipos de documentos según el país y el tipo de persona
   useEffect(() => {
-    let tiposDocumentos = []
-    if (pais === 'ES') {
-      if (persona === 'fisica') {
-        tiposDocumentos = ['NIF']
+    setTiposDocumentos(
+      comprobarTiposDocumentos(
+        form.getFieldValue('pais'),
+        form.getFieldValue('persona'),
+      ),
+    )
+  }, [form, pais, persona])
+
+  const comprobarTiposDocumentos = (paisAux, personaAux) => {
+    let tiposDocumentosAux = []
+    if (paisAux === 'ES') {
+      if (personaAux === 'fisica') {
+        tiposDocumentosAux = ['NIF']
       } else {
-        tiposDocumentos = ['NIF', 'CIF']
+        tiposDocumentosAux = ['NIF', 'CIF']
       }
-    } else if (pais) {
-      tiposDocumentos = ['NIE', 'PASAPORTE']
+    } else if (paisAux) {
+      tiposDocumentosAux = ['NIE', 'PASAPORTE']
     } else {
-      tiposDocumentos = ['NIF', 'CIF', 'NIE', 'PASAPORTE']
+      tiposDocumentosAux = ['NIF', 'CIF', 'NIE', 'PASAPORTE']
     }
 
-    setTiposDocumentos(tiposDocumentos)
-  }, [pais, persona])
+    return tiposDocumentosAux
+  }
 
   const validarCIF = (cif) => {
     var par = 0
@@ -121,10 +130,15 @@ export default ({ form, pais, persona }) => {
 
   //Funcion para validar el tipo de documento
   const checkTipoDocumento = (rule, value) => {
+    const tiposDocumentosAux = comprobarTiposDocumentos(
+      form.getFieldValue('pais'),
+      form.getFieldValue('persona'),
+    )
     if (
       !value ||
-      tiposDocumentos.findIndex((tipoDocumento) => value === tipoDocumento) !==
-        -1
+      tiposDocumentosAux.findIndex(
+        (tipoDocumento) => value === tipoDocumento,
+      ) !== -1
     ) {
       return Promise.resolve()
     } else {
